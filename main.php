@@ -20,7 +20,7 @@ interface ItemInterface extends Calculavel, Validavel
 
 class Validador
 {   //classe de responsabilidade única para validação, substituindo a repetição de código
-    //mensagens de erro mais específicas 
+    //mensagens de erro mais específicas, facilitando o entendimento do que está errado
     //método estático por nao precisar de instância
 
     /**
@@ -29,6 +29,10 @@ class Validador
      */
     public static function validarProduto(float $preco, int $quantidade): void
     {
+        //validando os dois juntos, para garantir a resposta correta
+        if ($preco < 0 && $quantidade <= 0) {
+            throw new Exception("Preço e quantidade inválidos.");
+        }
         if ($preco < 0) {
             throw new Exception("Preço não pode ser negativo.");
         }
@@ -71,7 +75,7 @@ class Item implements ItemInterface
         return $this->preco * $this->quantidade;
     }
 
-    // acesso aos atributos através de métodos getters
+    //acesso aos atributos através de métodos getters
     public function getNome(): string
     {
         return $this->nome;
@@ -85,6 +89,23 @@ class Item implements ItemInterface
     public function getQuantidade(): int
     {
         return $this->quantidade;
+    }
+
+    //caso seja necessário alterar os valores dos atributos, utilizar setters
+    //revalidar caso os valores sejam alterados, numa possível mudança no pedido por exemplo
+    public function setPreco(float $preco): void
+    {
+        $this->validar($preco, $this->quantidade);
+        $this->preco = $preco;
+    }
+    public function setQuantidade(int $quantidade): void
+    {
+        $this->validar($this->preco, $quantidade);
+        $this->quantidade = $quantidade;
+    }
+    public function setNome(string $nome): void
+    {
+        $this->nome = $nome;
     }
 }
 
