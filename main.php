@@ -6,7 +6,7 @@ interface Calculavel
 
 interface Validavel
 {
-    public function validar(): void;
+    public function validar(float $preco, int $quantidade): void;
 }
 
 interface ItemInterface extends Calculavel, Validavel
@@ -30,11 +30,11 @@ class Validador
     public static function validarProduto(float $preco, int $quantidade): void
     {
         if ($preco < 0) {
-            throw new Exception("Preço não pode ser negativo!");
+            throw new Exception("Preço não pode ser negativo.");
         }
 
         if ($quantidade <= 0) {
-            throw new Exception("Quantidade deve ser maior que zero!");
+            throw new Exception("Quantidade deve ser maior que zero.");
         }
     }
 }
@@ -50,15 +50,15 @@ class Item implements ItemInterface
 
     public function __construct(string $nome, float $preco, int $quantidade)
     {
+        $this->validar($preco, $quantidade);
         $this->nome = $nome;
         $this->preco = $preco;
         $this->quantidade = $quantidade;
-        $this->validar();
     }
 
-    public function validar(): void
+    public function validar(float $preco, int $quantidade): void
     {
-        Validador::validarProduto($this->preco, $this->quantidade);
+        Validador::validarProduto($preco, $quantidade);
     }
     public function calcular(): float
     {
